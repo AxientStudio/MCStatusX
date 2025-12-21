@@ -73,14 +73,87 @@ If you don’t trust it — read the code. That’s the point.
 
 ---
 
-## Example Usage
+## Quick Start (Copy & Run)
+
+### Install (local / dev mode)
+
+```bash
+git clone https://github.com/TerAlone6300/MCStatusX.git
+cd MCStatusX
+pip install -e .```
+
+# Basic Ping
 
 ```python
 from mcstatusx import ping
 
 result = ping("play.example.com", 25565)
 
-print(result.online)
-print(result.version.name)
-print(result.players.online)
-print(result.players.sample)
+print("Online:", result.online)
+print("Version:", result.version.name)
+print("Players:", result.players.online, "/", result.players.max)
+print("Sample:", result.players.sample)```
+
+# Using IP with Port (x.x.x.x:port)
+
+```python
+from mcstatusx import ping
+
+result = ping("1.2.3.4", 25565)
+print(result)```
+
+> You may also pass a combined address:
+
+```python
+from mcstatusx import ping_address
+
+result = ping_address("1.2.3.4:25565")
+print(result)```
+
+# Handling Errors Explicitly
+
+```python
+from mcstatusx import ping, MCStatusError
+
+try:
+    result = ping("invalid.host", 25565)
+except MCStatusError as e:
+    print("Error type:", e.code)
+    print("Reason:", e.message)```
+
+> Possible error messages include:
+Server is offline
+Connection timed out
+Failed to resolve hostname
+Invalid server response
+Protocol handshake failed
+
+# Transparency Demo (Raw Data)
+
+```python
+from mcstatusx import ping
+
+result = ping("play.example.com", 25565, debug=True)
+
+print(result.raw_request)
+print(result.raw_response)```
+
+This proves:
+No login packets are sent
+Only SLP handshake + status request
+All displayed data comes directly from the server
+
+---
+
+### CLI (Optional)
+
+```bash
+python -m mcstatusx play.example.com:25565```
+
+Example Output 
+
+Status: ONLINE
+Version: 1.21.1
+Players: 12 / 100
+Sample: Not provided by server
+Ping: 42ms
