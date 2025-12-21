@@ -47,6 +47,7 @@ If a server hides data, MCStatusX cannot and will not invent it.
 MCStatusX does **not** fetch UUIDs from Mojang or external APIs.
 
 UUIDs appear only if:
+
 - The server itself includes them in the SLP response
 - Common on:
   - `online-mode=true` servers
@@ -73,15 +74,19 @@ If you don’t trust it — read the code. That’s the point.
 
 ---
 
-## Quick Start (Copy & Run)
+## Quick Start
 
 ### Install (local / dev mode)
 
+```bash
 git clone https://github.com/TerAlone6300/MCStatusX.git
 cd MCStatusX
 pip install -e .
+```
 
-# Basic Ping
+---
+
+## Basic Ping
 
 ```python
 from mcstatusx import ping
@@ -92,24 +97,31 @@ print("Online:", result.online)
 print("Version:", result.version.name)
 print("Players:", result.players.online, "/", result.players.max)
 print("Sample:", result.players.sample)
+```
 
-# Using IP with Port (x.x.x.x:port)
+---
+
+## Using IP with Port
 
 ```python
 from mcstatusx import ping
 
 result = ping("1.2.3.4", 25565)
 print(result)
+```
 
-> You may also pass a combined address:
+### Combined Address
 
 ```python
 from mcstatusx import ping_address
 
 result = ping_address("1.2.3.4:25565")
 print(result)
+```
 
-# Handling Errors Explicitly
+---
+
+## Handling Errors Explicitly
 
 ```python
 from mcstatusx import ping, MCStatusError
@@ -119,15 +131,19 @@ try:
 except MCStatusError as e:
     print("Error type:", e.code)
     print("Reason:", e.message)
+```
 
-> Possible error messages include:
-Server is offline
-Connection timed out
-Failed to resolve hostname
-Invalid server response
-Protocol handshake failed
+Possible error messages include:
 
-# Transparency Demo (Raw Data)
+- Server is offline
+- Connection timed out
+- Failed to resolve hostname
+- Invalid server response
+- Protocol handshake failed
+
+---
+
+## Transparency Demo (Raw Data)
 
 ```python
 from mcstatusx import ping
@@ -136,23 +152,28 @@ result = ping("play.example.com", 25565, debug=True)
 
 print(result.raw_request)
 print(result.raw_response)
+```
 
 This proves:
-No login packets are sent
-Only SLP handshake + status request
-All displayed data comes directly from the server
+
+- No login packets are sent
+- Only SLP handshake + status request
+- All displayed data comes directly from the server
 
 ---
 
-### CLI (Optional)
+## CLI (Optional)
 
 ```bash
 python -m mcstatusx play.example.com:25565
+```
 
-Example Output 
+Example output:
 
+```
 Status: ONLINE
 Version: 1.21.1
 Players: 12 / 100
 Sample: Not provided by server
 Ping: 42ms
+```
