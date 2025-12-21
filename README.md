@@ -75,7 +75,7 @@ If you don’t trust it — read the code. That’s the point.
 
 ## Quick Start (Copy & Run)
 
-### Install (local / dev mode)
+# Install (local / dev mode)
 
 ```bash
 git clone https://github.com/TerAlone6300/MCStatusX.git
