@@ -80,7 +80,7 @@ If you don’t trust it — read the code. That’s the point.
 ```bash
 git clone https://github.com/TerAlone6300/MCStatusX.git
 cd MCStatusX
-pip install -e .```
+pip install -e .
 
 # Basic Ping
 
@@ -92,7 +92,7 @@ result = ping("play.example.com", 25565)
 print("Online:", result.online)
 print("Version:", result.version.name)
 print("Players:", result.players.online, "/", result.players.max)
-print("Sample:", result.players.sample)```
+print("Sample:", result.players.sample)
 
 # Using IP with Port (x.x.x.x:port)
 
@@ -100,7 +100,7 @@ print("Sample:", result.players.sample)```
 from mcstatusx import ping
 
 result = ping("1.2.3.4", 25565)
-print(result)```
+print(result)
 
 > You may also pass a combined address:
 
@@ -108,7 +108,7 @@ print(result)```
 from mcstatusx import ping_address
 
 result = ping_address("1.2.3.4:25565")
-print(result)```
+print(result)
 
 # Handling Errors Explicitly
 
@@ -119,7 +119,7 @@ try:
     result = ping("invalid.host", 25565)
 except MCStatusError as e:
     print("Error type:", e.code)
-    print("Reason:", e.message)```
+    print("Reason:", e.message)
 
 > Possible error messages include:
 Server is offline
@@ -136,7 +136,7 @@ from mcstatusx import ping
 result = ping("play.example.com", 25565, debug=True)
 
 print(result.raw_request)
-print(result.raw_response)```
+print(result.raw_response)
 
 This proves:
 No login packets are sent
@@ -148,7 +148,7 @@ All displayed data comes directly from the server
 ### CLI (Optional)
 
 ```bash
-python -m mcstatusx play.example.com:25565```
+python -m mcstatusx play.example.com:25565
 
 Example Output 
 
