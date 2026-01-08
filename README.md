@@ -1,30 +1,36 @@
 # MCStatusX
 
-MCStatusX is a **transparent, Python-based Minecraft server status library** inspired by services like mcstatus.io, but built with one clear goal:
+MCStatusX is a **transparent Python library** for checking Minecraft server status  
+(Java Edition & Bedrock Edition), built with one simple rule:
 
-> **Show exactly what the Minecraft server sends back — nothing more, nothing hidden.**
+> **The server decides what you see. MCStatusX never invents data.**
 
 No login.  
-No fake players.  
-No “magic UUID generation”.
+No UUID guessing.  
+No external APIs.
 
-Just protocol.
+Just protocol-level status queries.
 
 ---
 
-## What MCStatusX Does
+## Features
 
-MCStatusX queries a Minecraft server using the **official Server List Ping (SLP) protocol** and returns the raw information that the server itself provides.
+### Java Edition
+- Server online / offline
+- Version name & protocol
+- MOTD (raw server response)
+- Online players / max players
+- Player sample list **if the server provides it**
+- Ping (latency)
 
-It can retrieve:
+### Bedrock Edition (MCPE)
+Uses the official UDP ping protocol and retrieves **only what Bedrock servers expose**:
+- MOTD
+- Version string
+- Online players / max players
+- Ping
 
-- Server online/offline status
-- Server version and protocol
-- MOTD (raw + formatted)
-- Max players / online players
-- Player sample list (names + UUIDs **if the server provides them**)
-- Ping / latency
-- Clear, human-readable error reasons
+If Bedrock does not provide a field, MCStatusX does not fake it.
 
 ---
 
@@ -32,51 +38,19 @@ It can retrieve:
 
 To avoid any misunderstanding:
 
-- ❌ Does NOT log into the server
-- ❌ Does NOT impersonate a player
-- ❌ Does NOT brute-force or guess UUIDs
-- ❌ Does NOT bypass online-mode or authentication
-- ❌ Does NOT exploit server vulnerabilities
+- ❌ Does NOT log into servers
+- ❌ Does NOT authenticate players
+- ❌ Does NOT bypass online-mode
+- ❌ Does NOT generate or guess UUIDs
+- ❌ Does NOT scrape Mojang or Microsoft APIs
 
-If a server hides data, MCStatusX cannot and will not invent it.
-
----
-
-## Why UUIDs Can Appear (Even on Crack Servers)
-
-MCStatusX does **not** fetch UUIDs from Mojang or external APIs.
-
-UUIDs appear only if:
-
-- The server itself includes them in the SLP response
-- Common on:
-  - `online-mode=true` servers
-  - Some crack servers that generate offline UUIDs
-  - Proxies or modified server cores
-
-If the server sends it → MCStatusX shows it  
-If the server doesn’t → MCStatusX returns `None`
-
-This is intentional and verifiable.
+If a server hides data, MCStatusX respects that.
 
 ---
 
-## Transparency First
+## Installation
 
-MCStatusX is designed to be auditable.
-
-- Raw packets can be inspected
-- Parsed data maps directly to protocol fields
-- No hidden network calls
-- No third-party tracking
-
-If you don’t trust it — read the code. That’s the point.
-
----
-
-## Quick Start
-
-### Install (local / dev mode)
+Local / development install:
 
 ```bash
 git clone https://github.com/TerAlone6300/MCStatusX.git
@@ -86,94 +60,83 @@ pip install -e .
 
 ---
 
-## Basic Ping
+## Quick Start
+
+### Java Edition
 
 ```python
-from mcstatusx import ping
+import mcstatusx
 
-result = ping("play.example.com", 25565)
+status = mcstatusx.ping("play.example.com", 25565)
 
-print("Online:", result.online)
-print("Version:", result.version.name)
-print("Players:", result.players.online, "/", result.players.max)
-print("Sample:", result.players.sample)
+print(status.online)
+print(status.version.name)
+print(status.players.online, "/", status.players.max)
+print(status.players.sample)
+print(status.ping, "ms")
 ```
 
 ---
 
-## Using IP with Port
+### Bedrock Edition (MCPE)
 
 ```python
-from mcstatusx import ping
+import mcstatusx
 
-result = ping("1.2.3.4", 25565)
-print(result)
-```
+status = mcstatusx.ping("play.example.com", 19132, edition="bedrock")
 
-### Combined Address
-
-```python
-from mcstatusx import ping_address
-
-result = ping_address("1.2.3.4:25565")
-print(result)
+print(status.motd)
+print(status.players.online, "/", status.players.max)
+print(status.ping, "ms")
 ```
 
 ---
 
-## Handling Errors Explicitly
+## Error Handling
+
+All errors are exposed directly via the mcstatusx namespace.
 
 ```python
-from mcstatusx import ping, MCStatusError
+import mcstatusx
 
 try:
-    result = ping("invalid.host", 25565)
-except MCStatusError as e:
-    print("Error type:", e.code)
-    print("Reason:", e.message)
+    mcstatusx.ping("invalid.host")
+except mcstatusx.ResolveError:
+    print("Failed to resolve hostname")
+except mcstatusx.TimeoutError:
+    print("Connection timed out")
+except mcstatusx.MCStatusError as e:
+    print(e)
 ```
 
-Possible error messages include:
-
-- Server is offline
-- Connection timed out
+Common errors:
 - Failed to resolve hostname
-- Invalid server response
+- Connection timed out
+- Server is offline
 - Protocol handshake failed
 
 ---
 
-## Transparency Demo (Raw Data)
+## Transparency Guarantee
 
-```python
-from mcstatusx import ping
+MCStatusX:
+- Sends only status handshake packets
+- Never logs in or authenticates
+- Never fabricates UUIDs or player data
+- Displays exactly what the server returns
 
-result = ping("play.example.com", 25565, debug=True)
-
-print(result.raw_request)
-print(result.raw_response)
-```
-
-This proves:
-
-- No login packets are sent
-- Only SLP handshake + status request
-- All displayed data comes directly from the server
+If you doubt it — read the source.
 
 ---
 
-## CLI (Optional)
+## License
 
-```bash
-python -m mcstatusx play.example.com:25565
-```
+MIT License.
 
-Example output:
+---
 
-```
-Status: ONLINE
-Version: 1.21.1
-Players: 12 / 100
-Sample: Not provided by server
-Ping: 42ms
-```
+## Disclaimer
+
+MCStatusX is a **status query tool**, not a hacking utility.
+
+Any misuse of this software is not supported and is the responsibility of the user.
