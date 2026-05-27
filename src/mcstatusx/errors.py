@@ -24,3 +24,7 @@ class InvalidAddressError(MCStatusError):
 
 class ProtocolError(MCStatusError):
     code = "Protocol handshake failed"
+
+
+class PacketError(MCStatusError):
+    code = "Malformed packet received"
