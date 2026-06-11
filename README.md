@@ -29,7 +29,10 @@ git clone https://github.com/TerAlone6300/MCStatusX.git
 cd MCStatusX
 pip install -e .
 ```
-
+or
+```bash
+pip install mcstatusx
+```
 ---
 
 ## CLI Usage
