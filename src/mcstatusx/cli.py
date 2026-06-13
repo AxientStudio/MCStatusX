@@ -20,9 +20,9 @@ Available -g fields:
 
 Examples:
   mcstatusx play.hypixel.net
-  mcstatusx eu1.freegamehost.xyz:24299 -g motd playerlist
-  mcstatusx eu1.freegamehost.xyz:24299 -g playerlist -v java
-  mcstatusx eu1.freegamehost.xyz:27812 -g maxplayers -v bedrock
+  mcstatusx play.mccisland.net -g motd playerlist
+  mcstatusx play.mccisland.net -g playerlist -v java
+  mcstatusx play.hive.gg:19132 -g maxplayers -v bedrock
 """
 
 from __future__ import annotations

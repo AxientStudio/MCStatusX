@@ -114,7 +114,7 @@ status = mcstatusx.ping("play.example.com", retries=3, timeout=5)
 ```python
 targets = [
     "play.example.com:25565",
-    "eu1.freegamehost.xyz:24299",
+    "play.mccisland.net",
     ("192.168.1.10", 25565),
 ]
 
